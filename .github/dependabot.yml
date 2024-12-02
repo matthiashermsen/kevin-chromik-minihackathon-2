@@ -1,0 +1,32 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: fix
+      prefix-development: chore
+    assignees:
+      - matthiashermsen
+    versioning-strategy: increase
+    allow:
+      - dependency-type: direct
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: chore
+    assignees:
+      - matthiashermsen
+    groups:
+      dependencies:
+        patterns:
+          - "*"
