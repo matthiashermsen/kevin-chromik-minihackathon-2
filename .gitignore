@@ -1,0 +1,28 @@
+# Logs
+logs
+*.log*
+
+# Node
+node_modules
+
+# Environment
+.env
+.env.*
+
+# Output
+dist
+build
+
+# IDE
+.vscode
+.idea
+.zed
+
+# Turbo
+.turbo
+
+# Vercel
+.vercel
+
+# OS
+.DS_Store

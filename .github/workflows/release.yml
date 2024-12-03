@@ -1,0 +1,69 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.ADMIN_TOKEN }}
+
+      - name: Get next version
+        id: get_next_version
+        uses: thenativeweb/get-next-version@2.6.3
+
+      - name: Setup Node
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Install dependencies
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        run: npm install
+
+      - name: Setup Git user
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Create new version
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        run: |
+          npm version --no-git-tag-version ${{steps.get_next_version.outputs.version}}
+          npm run fix:analyze
+          git add .
+          git commit -m "chore: bump package version to ${{steps.get_next_version.outputs.version}} [skip ci]"
+          git push
+
+      - name: Create new tag
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        run: |
+          git tag ${{steps.get_next_version.outputs.version}}
+          git push origin ${{steps.get_next_version.outputs.version}}
+
+      - name: Build the application
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        run: npm run build
+
+      - name: Distribute app as ZIP file
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        run: |
+          mv ./dist ./${{ github.event.repository.name }}-${{steps.get_next_version.outputs.version}}
+          zip -r ${{ github.event.repository.name }}-${{steps.get_next_version.outputs.version}}.zip ./${{ github.event.repository.name }}-${{steps.get_next_version.outputs.version}}
+
+      - name: Release app
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.get_next_version.outputs.version }}
+          artifacts: "./${{ github.event.repository.name }}-${{steps.get_next_version.outputs.version}}.zip"
