@@ -71,9 +71,23 @@ jobs:
           tag: ${{ steps.get_next_version.outputs.version }}
           artifacts: "./${{ github.event.repository.name }}-${{steps.get_next_version.outputs.version}}.zip"
 
-      - name: Deploy app to Github Pages
-        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload app distribution as Github Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./${{ github.event.repository.name }}-${{steps.get_next_version.outputs.version}}
+          path: ./${{ github.event.repository.name }}-${{steps.get_next_version.outputs.version}}
+
+  deploy-to-gh-pages:
+      environment:
+        name: github-pages
+        url: ${{ steps.deployment.outputs.page_url }}
+      runs-on: ubuntu-latest
+      permissions:
+        id-token: write
+        pages: write
+      needs: release
+      steps:
+        - name: Deploy to GitHub Pages
+          uses: actions/deploy-pages@v4
