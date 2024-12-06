@@ -70,3 +70,10 @@ jobs:
         with:
           tag: ${{ steps.get_next_version.outputs.version }}
           artifacts: "./${{ github.event.repository.name }}-${{steps.get_next_version.outputs.version}}.zip"
+
+      - name: Deploy app to Github Pages
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./${{ github.event.repository.name }}-${{steps.get_next_version.outputs.version}}
