@@ -44,6 +44,7 @@
 	cursor: pointer;
 	border-radius: 4px;
 	border-color: #ffec6d #8b6828 #c44d29 #8b6828;
+	transition: background-color 0.3s ease;
 }
 
 .submitButton:not(:disabled):hover {
