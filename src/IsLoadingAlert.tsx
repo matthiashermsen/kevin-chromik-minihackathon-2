@@ -9,7 +9,10 @@ function IsLoadingAlert({ text }: Props) {
 		<div>
 			<div className={styles.wobble}>
 				{text.split("").map((char, index) => (
-					<span key={index} style={{ animationDelay: `${index * 50}ms` }}>
+					<span
+						key={`${index}. ${char}`}
+						style={{ animationDelay: `${index * 50}ms` }}
+					>
 						{char}
 					</span>
 				))}

@@ -1,4 +1,4 @@
-import styles from "./FetchErrorAlert.module.css"
+import styles from "./FetchErrorAlert.module.css";
 
 interface Props {
 	text: string;

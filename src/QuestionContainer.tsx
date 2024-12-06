@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import { FetchErrorAlert } from "./FetchErrorAlert";
 import { IsLoadingAlert } from "./IsLoadingAlert";
+import styles from "./QuestionContainer.module.css";
 import {
 	answerSchema,
 	submitAnswer as fetchAnswer,
@@ -9,7 +10,6 @@ import {
 	fetchQuestion,
 	questionSchema,
 } from "./api";
-import styles from "./QuestionContainer.module.css";
 
 interface Props {
 	userInfo: string;
@@ -65,7 +65,7 @@ function QuestionContainer({ userInfo, setHasUserInfoBeenConfirmed }: Props) {
 
 	useEffect(() => {
 		setAnswer("");
-	}, [question]);
+	}, []);
 
 	function requestQuestion() {
 		return queryClient.invalidateQueries({
@@ -76,7 +76,11 @@ function QuestionContainer({ userInfo, setHasUserInfoBeenConfirmed }: Props) {
 	return (
 		<div className={styles.wrapper}>
 			<div className={styles.container}>
-				<button type="button" onClick={() => setHasUserInfoBeenConfirmed(false)} className={styles.clearUserInfoButton}>
+				<button
+					type="button"
+					onClick={() => setHasUserInfoBeenConfirmed(false)}
+					className={styles.clearUserInfoButton}
+				>
 					Vergiss mich
 				</button>
 				{hasFetchingQuestionFailed && (
@@ -86,7 +90,11 @@ function QuestionContainer({ userInfo, setHasUserInfoBeenConfirmed }: Props) {
 				{!isFetchingQuestion && !hasFetchingQuestionFailed && (
 					<>
 						<div className={styles.rightButtonContainer}>
-							<button type="button" onClick={() => requestQuestion()} className={styles.defaultButton}>
+							<button
+								type="button"
+								onClick={() => requestQuestion()}
+								className={styles.defaultButton}
+							>
 								Neue Frage
 							</button>
 						</div>
@@ -121,11 +129,15 @@ function QuestionContainer({ userInfo, setHasUserInfoBeenConfirmed }: Props) {
 							answerResult?.relatedToQuestionId === question.id && (
 								<>
 									{answerResult?.isAnswerCorrect && (
-										<div className={styles.successResponse}>Die Antwort ist korrekt!</div>
+										<div className={styles.successResponse}>
+											Die Antwort ist korrekt!
+										</div>
 									)}
 									{!answerResult?.isAnswerCorrect && (
 										<>
-											<div className={styles.failureResponse}>Die Antwort ist leider nicht korrekt...</div>
+											<div className={styles.failureResponse}>
+												Die Antwort ist leider nicht korrekt...
+											</div>
 											<div>{answerResult?.explanation}</div>
 										</>
 									)}
