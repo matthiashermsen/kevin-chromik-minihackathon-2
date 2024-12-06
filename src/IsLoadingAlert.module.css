@@ -1,0 +1,22 @@
+.wobble {
+	font-size: 1.5rem;
+	display: inline-block;
+}
+
+.wobble span {
+	display: inline-block;
+	animation: wobb 400ms linear infinite;
+}
+
+@keyframes wobb {
+	0%,
+	100% {
+		transform: translateY(0px);
+	}
+	25% {
+		transform: translateY(-3px);
+	}
+	75% {
+		transform: translateY(3px);
+	}
+}
