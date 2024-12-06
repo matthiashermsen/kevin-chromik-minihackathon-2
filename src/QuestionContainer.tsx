@@ -9,6 +9,7 @@ import {
 	fetchQuestion,
 	questionSchema,
 } from "./api";
+import styles from "./QuestionContainer.module.css";
 
 interface Props {
 	userInfo: string;
@@ -73,59 +74,67 @@ function QuestionContainer({ userInfo, setHasUserInfoBeenConfirmed }: Props) {
 	}
 
 	return (
-		<>
-			<button type="button" onClick={() => setHasUserInfoBeenConfirmed(false)}>
-				Vergiss mich
-			</button>
-			{hasFetchingQuestionFailed && (
-				<FetchErrorAlert text="Leider ging etwas beim Laden der Frage schief!" />
-			)}
-			{isFetchingQuestion && <IsLoadingAlert text="Frage heraussuchen..." />}
-			{!isFetchingQuestion && !hasFetchingQuestionFailed && (
-				<>
-					<button type="button" onClick={() => requestQuestion()}>
-						Neue Frage
-					</button>
-					<div>Frage</div>
-					<div>{question.text}</div>
-					<div>Antwort</div>
-					<textarea
-						value={answer}
-						disabled={answerResult?.relatedToQuestionId === question.id}
-						onChange={(e) => setAnswer(e.target.value)}
-					/>
-					<button
-						type="button"
-						disabled={
-							answer.length === 0 ||
-							answerResult?.relatedToQuestionId === question.id
-						}
-						onClick={() => submitAnswer()}
-					>
-						Antwort abgeben
-					</button>
-					{hasSubmittingAnswerFailed && (
-						<FetchErrorAlert text="Leider ging etwas beim Übermitteln der Antwort schief!" />
-					)}
-					{isSubmittingAnswer && <IsLoadingAlert text="Antwort prüfen..." />}
-					{!isSubmittingAnswer &&
-						!hasSubmittingAnswerFailed &&
-						answerResult?.relatedToQuestionId === question.id && (
-							<>
-								{answerResult?.isAnswerCorrect && (
-									<div>Korrekte Antwort...</div>
-								)}
-								{!answerResult?.isAnswerCorrect && (
-									<>
-										<div>Falsche Antwort...</div>
-										<div>{answerResult?.explanation}</div>
-									</>
-								)}
-							</>
+		<div className={styles.wrapper}>
+			<div className={styles.container}>
+				<button type="button" onClick={() => setHasUserInfoBeenConfirmed(false)} className={styles.clearUserInfoButton}>
+					Vergiss mich
+				</button>
+				{hasFetchingQuestionFailed && (
+					<FetchErrorAlert text="Leider ging etwas beim Laden der Frage schief!" />
+				)}
+				{isFetchingQuestion && <IsLoadingAlert text="Frage heraussuchen..." />}
+				{!isFetchingQuestion && !hasFetchingQuestionFailed && (
+					<>
+						<div className={styles.rightButtonContainer}>
+							<button type="button" onClick={() => requestQuestion()} className={styles.defaultButton}>
+								Neue Frage
+							</button>
+						</div>
+						<div className={styles.header}>Die Frage lautet...</div>
+						<div className={styles.questionText}>{question.text}</div>
+						<div className={styles.header}>Deine Antwort:</div>
+						<textarea
+							value={answer}
+							disabled={answerResult?.relatedToQuestionId === question.id}
+							onChange={(e) => setAnswer(e.target.value)}
+							className={styles.answerInput}
+						/>
+						<div className={styles.rightButtonContainer}>
+							<button
+								type="button"
+								disabled={
+									answer.length === 0 ||
+									answerResult?.relatedToQuestionId === question.id
+								}
+								onClick={() => submitAnswer()}
+								className={styles.defaultButton}
+							>
+								Antwort abgeben
+							</button>
+						</div>
+						{hasSubmittingAnswerFailed && (
+							<FetchErrorAlert text="Leider ging etwas beim Übermitteln der Antwort schief!" />
 						)}
-				</>
-			)}
-		</>
+						{isSubmittingAnswer && <IsLoadingAlert text="Antwort prüfen..." />}
+						{!isSubmittingAnswer &&
+							!hasSubmittingAnswerFailed &&
+							answerResult?.relatedToQuestionId === question.id && (
+								<>
+									{answerResult?.isAnswerCorrect && (
+										<div className={styles.successResponse}>Die Antwort ist korrekt!</div>
+									)}
+									{!answerResult?.isAnswerCorrect && (
+										<>
+											<div className={styles.failureResponse}>Die Antwort ist leider nicht korrekt...</div>
+											<div>{answerResult?.explanation}</div>
+										</>
+									)}
+								</>
+							)}
+					</>
+				)}
+			</div>
+		</div>
 	);
 }
 
