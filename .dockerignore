@@ -1,0 +1,34 @@
+# Docker
+Dockerfile
+.dockerignore
+
+# Editor
+.vscode
+.idea
+.zed
+
+# Github
+.github
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# npm
+.npmrc
+
+# Node
+node_modules
+
+# Build
+dist
+
+# Tests
+test
+
+# biome
+biome.json
+
+# Repository
+README.md
