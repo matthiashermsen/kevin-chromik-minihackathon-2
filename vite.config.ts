@@ -8,13 +8,4 @@ export default defineConfig({
 	define: {
 		__APP_VERSION__: JSON.stringify(version),
 	},
-	server: {
-		proxy: {
-			"/api": {
-				target: "https://api.infomaniak.com",
-				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api/, ""),
-			},
-		},
-	},
 });
